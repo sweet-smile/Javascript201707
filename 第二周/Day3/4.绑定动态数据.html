@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+<<<<<<< HEAD
 </head>
 <body>
 <button id="btn">查询</button>
@@ -11,6 +12,32 @@
 <ul id="oUl">
 </ul>
 <script type="text/javascript" src="./utils.js"></script>
+=======
+    <style type="text/css">
+
+        ul {
+            overflow: hidden;
+        }
+        ul li{
+            list-style: none;
+            float: left;
+        }
+        ul li img {
+            width: 150px;
+            height: 150px;
+        }
+    </style>
+</head>
+<body>
+<button id="btn">查询</button>
+<button id="pin">拼音</button>
+<button id="pop">人气</button>
+<h3>排行榜</h3>
+<ul id="oUl">
+
+</ul>
+<script type="text/javascript" src="utils.js"></script>
+>>>>>>> 768bbf9b3dee3688a42fa2631e5782f9ee08c1d6
 <script type="text/javascript">
     var pin = document.getElementById('pin');
     var pop = document.getElementById('pop');
@@ -19,7 +46,11 @@
         getData();
     };
 
+<<<<<<< HEAD
     // 获取数据
+=======
+    // 获取数据  ajax
+>>>>>>> 768bbf9b3dee3688a42fa2631e5782f9ee08c1d6
     function getData() {
         var xhr = new XMLHttpRequest();
         xhr.open('post', './data.json', true);
@@ -28,13 +59,22 @@
                 var data = this.responseText;// 接收到字符串格式数据
                 // 转化为JSON对象
                 data = "JSON" in window ? JSON.parse(data) : eval('(' + data + ')');
+<<<<<<< HEAD
                 console.log(data);
+=======
+>>>>>>> 768bbf9b3dee3688a42fa2631e5782f9ee08c1d6
                 bindData(data); // 将获取到的数据 传给bindData进行数据绑定
             }
         };
         xhr.send();
     }
+<<<<<<< HEAD
     // 数据绑定
+=======
+
+
+    // 数据绑定 字符串拼接
+>>>>>>> 768bbf9b3dee3688a42fa2631e5782f9ee08c1d6
     function bindData(res) {
         var str = '';
         for (var i = 0; i < res.length; i++) {
@@ -48,6 +88,7 @@
             str += '</li>';
         }
         oUl.innerHTML = str;
+<<<<<<< HEAD
         console.log(str);
     }
     var oLis = oUl.getElementsByTagName('li');
@@ -73,6 +114,37 @@
     };
 
 
+=======
+        bindEvent();
+    }
+
+    // 绑定事件 将类数组转化为数组 借用数组sort方法排序 最后输出到页面
+    function bindEvent() {
+        var lis = document.getElementsByTagName('li');
+        var ul = document.getElementsByTagName('ul')[0];
+        pin.flag = -1;
+        // 排序
+        pin.onclick = pop.onclick = function () {
+            var that = this;
+            pin.flag *= -1;
+            var lisAry = utils.likeToArray(lis);
+            lisAry.sort(function (a, b) {
+                var p1 = a.getAttribute(that.id);
+                var p2 = b.getAttribute(that.id);
+                if (isNaN(p1)) {
+                    return p1.localeCompare(p2) * pin.flag;
+                }
+                return (p2 - p1) * pin.flag
+            });
+
+            var frag = document.createDocumentFragment();
+            for (var i = 0; i < lisAry.length; i++) {
+                frag.appendChild(lisAry[i]);
+            }
+            ul.appendChild(frag);
+        }
+    }
+>>>>>>> 768bbf9b3dee3688a42fa2631e5782f9ee08c1d6
 </script>
 </body>
 </html>
