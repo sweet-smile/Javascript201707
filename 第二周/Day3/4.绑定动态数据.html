@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<button id="btn">查询</button>
+<button id="pin">拼音</button> <button id="pop">人气</button>
+<h3>排行榜</h3>
+<ul id="oUl">
+</ul>
+<script type="text/javascript" src="./utils.js"></script>
+<script type="text/javascript">
+    var pin = document.getElementById('pin');
+    var pop = document.getElementById('pop');
+
+    btn.onclick = function () {
+        getData();
+    };
+
+    // 获取数据
+    function getData() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('post', './data.json', true);
+        xhr.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                var data = this.responseText;// 接收到字符串格式数据
+                // 转化为JSON对象
+                data = "JSON" in window ? JSON.parse(data) : eval('(' + data + ')');
+                console.log(data);
+                bindData(data); // 将获取到的数据 传给bindData进行数据绑定
+            }
+        };
+        xhr.send();
+    }
+    // 数据绑定
+    function bindData(res) {
+        var str = '';
+        for (var i = 0; i < res.length; i++) {
+            var cur = res[i]; // 遍历出来的每一条歌手信息
+            str += '<li pin=' + cur.pin + ' pop= ' + cur.pop + '>';
+            str += '<img src=' + cur.img + '>';
+            str += '<p>';
+            str += '<span>歌手：' + cur.name + '</span>';
+            str += ' <span>人气：' + cur.pop + '</span>';
+            str += '</p>';
+            str += '</li>';
+        }
+        oUl.innerHTML = str;
+        console.log(str);
+    }
+    var oLis = oUl.getElementsByTagName('li');
+    var arrList = utils.likeToArray(oLis);
+    pin.flag = -1;
+    // 排序
+    pin.onclick = pop.onclick = function () {
+        var that = this;
+        pin.flag *= -1;
+        arrList.sort(function (a, b) { // a 和 b 就是每一次要比较的li元素
+            var p1 = a.getAttribute(that.id); // 得到保存在li元素自身拼音字母
+            var p2 = b.getAttribute(that.id);
+            if (isNaN(p1)) { // 按照字符串方法比较
+                return p1.localeCompare(p2) * pin.flag;
+            }
+            return (p1 - p2) * pin.flag; // 按照数字比较
+        });
+        var frg = document.createDocumentFragment();
+        for (var i = 0; i < arrList.length; i++) {
+            frg.appendChild(arrList[i]);
+        }
+        oUl.appendChild(frg);
+    };
+
+
+</script>
+</body>
+</html>
